@@ -1,37 +1,37 @@
-var path = require('path');
-var SRC_DIR = path.join(__dirname, '/client/src');
-var DIST_DIR = path.join(__dirname, '/client/dist');
+const path = require("path");
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  mode: 'development',
-  entry: `${SRC_DIR}/index.js`,
+  mode: "development",
+  entry: "./client/src/index.jsx",
   output: {
-    filename: 'bundle.js',
-    path: DIST_DIR
+    path: path.join(__dirname, 'client/dist'),
+    filename: "bundle.js"
   },
-  devtool: 'source-map',
   module: {
     rules: [
       {
-        test: /\.(js|jsx)?/,
+        test: /\.(jsx|js)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-react"
-            ],
-            plugins: [
-              ["@babel/plugin-transform-runtime",
-                {
-                  "regenerator": true
-                }
-              ]
-            ]
-          }
-        }
+        loader: "babel-loader"
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader','css-loader']
       }
-    ],
-  }
-};
+    ]
+  },
+  devtool: "eval-cheap-module-source-map",
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'client/dist'),
+    },
+    compress: true,
+    port: 3000,
+  },
+
+  plugins: [
+    new Dotenv()
+  ]
+
+}
